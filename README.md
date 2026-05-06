@@ -25,6 +25,7 @@ It is organized as follows:
 - `REPET`: contains all ML related scripts, such as training scripts, model descriptions, and model testing scripts
 - `stats`: contains numerous statistical analysis scripts, both for the dataset itself, and for result files of ML scripts
 - `templates`: placeholder files used for the dataset generation. Also includes the list of default slicing parameters, and the printer configuration files
+- The `environment.yml` file contains all python dependencies required for all scripts
 - Other scripts at the root: common python functions, classes, and constants, used by other scripts
 
 ## How to use the dataset for a new script
