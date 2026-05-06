@@ -14,7 +14,7 @@ This folder contains the following scripts, designed specifically for the data f
 
 Each script has a `--help` or `-h` flag for further usage details.
 
-## Used commands for main paper body
+## Used commands for main paper body
 
 Here is the list of all commands used for the figures of the main paper body:
 
