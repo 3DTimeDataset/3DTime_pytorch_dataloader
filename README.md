@@ -8,6 +8,8 @@ We present 3DTime, the first public large-scale dataset for predicting the durat
 
 ## Dataset download access
 
+IMPORTANT NOTE: due to the peculiar data format, it is not possible to load the dataset using automatic croissant tools. Instead, use the code provided in this repository
+
 Full dataset download link (NOTE FOR REVIEWERS: this DOI link will be made accessible upon acceptance, in the meantime, the OpenReview submission contains an equivalent private link):
 
 > Masked for review
