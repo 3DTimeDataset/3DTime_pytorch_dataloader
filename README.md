@@ -1,16 +1,24 @@
 [comment]: <> (This README file was generated on 2026-05-05 by Niels Cobat.)
 
-[comment]: <> (Last updated: [2026-05-05].)
+[comment]: <> (Last updated: [2026-05-06].)
  
-# GENERAL INFORMATION
- 
-## Dataset name: 3DTime
+# 3DTime Dataset
 
 We present 3DTime, the first public large-scale dataset for predicting the duration of 3D printing instructions. It comprises 99,005 multivariate time series, each representing a sequence of G-code instructions annotated with execution durations, totaling more than 12 years of print. The dataset introduces several modeling challenges: long sequences (on average 79,934 instructions, up to 27 million), multi-input multi-target annotations, and strong contextual dependencies, where instruction durations depend on both past and future operations. These properties make 3DTime a relevant benchmark for long-context and sequence-to-sequence time-series modeling.
 
+## Usefull links
+
+Full dataset download link (NOTE FOR REVIEWERS: this DOI link will be made accessible upon acceptance, in the meantime, the OpenReview submission contains an equivalent private link):
+
+> Masked for review
+
+Small, easy to manipulate, version of the dataset:
+
+> https://huggingface.co/datasets/3DTimeDataset/3DTime
+
 ## Code base
 
-This depository contains the code base of the 3DTime dataset, currently under review for NeurIPS Datasets and Benchmarks 2026. It includes files used to generate the dataset, scripts to train and test the presented ML models, and statistical scripts for various data analysis.
+This repository contains the code base of the 3DTime dataset, currently under review for NeurIPS Datasets and Benchmarks 2026. It includes files used to generate the dataset, scripts to train and test the presented ML models, and statistical scripts for various data analysis.
 
 It is organized as follows:
 - `datasetGeneration`: includes files used for the dataset generation, such as slicing and annotation scripts
@@ -21,7 +29,7 @@ It is organized as follows:
 
 ## How to use the dataset for a new script
 
-For most use cases, the already existing scripts can be used. However, if you want to use the dataset in any other way, we still recommend to use our custom made PyTorch dataset reader, for efficient use, as it was specifically developped for the peculiar data format and size.
+For most use cases, the already existing scripts can be used. However, if you want to use the dataset in any other way, we still recommend to use our custom made PyTorch dataset reader, for efficient use, as it was specifically developped for the peculiar data format and size. Each sub-folder contains its own README.md for more details.
 
 To use it, you can simply create a new python script at the root of this repository, and use the following:
 
@@ -35,7 +43,7 @@ import torch
 # Custom Pytorch Dataset loader script
 import REPET.VectorDataset as vd
 
-# The following script can be used to modify the G-code instruction vector content at runtime
+# The following script can be used to modify the G-code instruction vector content at runtime (it must be imported anyway)
 import REPET.UpdateVectors as UV
 
 # Dataset initialization (which might take up to a few minutes for the full dataset)
@@ -75,7 +83,7 @@ dataloader = td.DataLoader(dataset, batch_size=BATCH_SIZE, shuffle=False)
 for i, (features, target) in enumerate(dataloader):
     # The shape of both "features" and "target" PyTorch tensors will be respectivelly:
     # features.shape = [BATCH_SIZE, WINDOW_SIZE, UV.TRUE_INPUT_VECTOR_SIZE]
-    # target.shape = [BATCH_SIZE, RIGHT_OFFSET - LEFT_OFFSET, UV.TRUE_INPUT_VECTOR_SIZE]
+    # target.shape = [BATCH_SIZE, RIGHT_OFFSET - LEFT_OFFSET, UV.TRUE_LABEL_VECTOR_SIZE]
     ...
 
 ```
@@ -115,16 +123,6 @@ for file in filenames:
 > romaric.gaudel@irisa.fr
 
 > damien.hardy@irisa.fr
-
-## Usefull links
-
-Smaller, easier to use, version of the dataset:
-
-> https://huggingface.co/datasets/3DTimeDataset/3DTime
-
-Full dataset access:
-
-> https://doi.org/10.57745/QR5GGS
    
 ## Description of sources and methods used to collect and generate data:
 
