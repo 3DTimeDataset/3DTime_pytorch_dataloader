@@ -6,7 +6,7 @@
 
 We present 3DTime, the first public large-scale dataset for predicting the duration of 3D printing instructions. It comprises 99,005 multivariate time series, each representing a sequence of G-code instructions annotated with execution durations, totaling more than 12 years of print. The dataset introduces several modeling challenges: long sequences (on average 79,934 instructions, up to 27 million), multi-input multi-target annotations, and strong contextual dependencies, where instruction durations depend on both past and future operations. These properties make 3DTime a relevant benchmark for long-context and sequence-to-sequence time-series modeling.
 
-## Usefull links
+## Dataset download access
 
 Full dataset download link (NOTE FOR REVIEWERS: this DOI link will be made accessible upon acceptance, in the meantime, the OpenReview submission contains an equivalent private link):
 
