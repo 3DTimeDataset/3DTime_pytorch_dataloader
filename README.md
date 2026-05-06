@@ -18,6 +18,95 @@ It is organized as follows:
 - `stats`: contains numerous statistical analysis scripts, both for the dataset itself, and for result files of ML scripts
 - `templates`: placeholder files used for the dataset generation. Also includes the list of default slicing parameters, and the printer configuration files
 - Other scripts at the root: common python functions, classes, and constants, used by other scripts
+
+## How to use the dataset for a new script
+
+For most use cases, the already existing scripts can be used. However, if you want to use the dataset in any other way, we still recommend to use our custom made PyTorch dataset reader, for efficient use, as it was specifically developped for the peculiar data format and size.
+
+To use it, you can simply create a new python script at the root of this repository, and use the following:
+
+```python
+# Basic imports for common functions, classes and constants
+import Logger
+import Utils
+import Constants
+import torch
+
+# Custom Pytorch Dataset loader script
+import REPET.VectorDataset as vd
+
+# The following script can be used to modify the G-code instruction vector content at runtime
+import REPET.UpdateVectors as UV
+
+# Dataset initialization (which might take up to a few minutes for the full dataset)
+dataset = vd.VectorDataset(
+    DATASET_PATH_TO_CHANGE, # Path to the dataset binary files (note: does not work with raw G-code files)
+    WINDOW_SIZE, # Number of G-code instructions to load per sample, for example in the paper, we used window
+                 # sizes of 100 and 1,000
+
+    Constants.DEFAULT_INPUT_SIZE, # Do not change, this represents the number of input features per instruction
+    Constants.DEFAULT_LABEL_SIZE, # Do not change, this represents the number of label features per instruction
+
+    # For these two values, we recommend to set them at 0 and {WINDOW_SIZE} respectivelly for easier usage.
+    # They are used to reduce the target tensor sequence size compared to the input. See the file
+    # "REPET/VectorDataset.py" for documentation
+    LEFT_OFFSET,
+    RIGHT_OFFSET,
+
+    torch.device('cuda' if torch.cuda.is_available() else 'cpu'), # PyTorch device specification
+
+    random_seed=None, # Set to None if you do not want to randomize the dataset file reading order
+
+    # These three values are used to (potentially) update the instruction vectors at runtime, we do not recommend
+    # to change them, but instead to modify the "REPET/UpdateVectors.py" script directly
+    masked_inputs=UV.SELECTED_INPUTS,
+    masked_labels=UV.SELECTED_LABELS,
+    append_input_vectors=UV.UPDATING_FUNCTIONS
+)
+
+# You can then use the dataset with a pytorch dataloader:
+import torch.utils.data as td
+dataloader = td.DataLoader(dataset, batch_size=BATCH_SIZE, shuffle=False)
+
+# If you want to use a shuffled dataloader (for example to train an ML model), we HIGHLY recommend to use the following:
+# dataloader = td.DataLoader(dataset, num_workers=0, batch_sampler=Utils.BatchSampler(len(dataset), BATCH_SIZE, RANDOM_SEED))
+
+# You can then iterate the dataloader:
+for i, (features, target) in enumerate(dataloader):
+    # The shape of both "features" and "target" PyTorch tensors will be respectivelly:
+    # features.shape = [BATCH_SIZE, WINDOW_SIZE, UV.TRUE_INPUT_VECTOR_SIZE]
+    # target.shape = [BATCH_SIZE, RIGHT_OFFSET - LEFT_OFFSET, UV.TRUE_INPUT_VECTOR_SIZE]
+    ...
+
+```
+
+If, instead of using the full dataset, you want to iterate over individual G-code files, we recommend the following:
+
+```python
+import os
+for root, _, files in os.walk(DATASET_PATH_TO_CHANGE):
+    for file in files:
+        if file.endswith(".dat"):
+            dataset = vd.VectorDataset(
+                os.path.join(root, file),
+                ... # Other class flags, as shown above
+            )
+            ... # Whatever you want to do with a single G-code file data
+```
+
+Or alternatively:
+
+```python
+from glob import glob
+path = f"{DATASET_PATH_TO_CHANGE}/**/*.dat"
+filenames = glob(path, recursive=True)
+for file in filenames:
+    dataset = vd.VectorDataset(
+        file,
+        ... # Other class flags, as shown above
+    )
+    ... # Whatever you want to do with a single G-code file data
+```
  
 ## Contact email:
 
