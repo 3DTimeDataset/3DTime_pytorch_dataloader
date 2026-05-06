@@ -4,7 +4,6 @@ Some utility functions for all kind of scripts in this repository.
 
 import os
 import random
-import subprocess
 import time
 from typing import Any, Callable, Generator, List, Iterator
 import zipfile
@@ -457,15 +456,10 @@ def file_size(filename: str) -> int:
 	"""
 	Returns the number of bytes of the file path provided as argument.
 	 	
-	Raises IOError if failed.
-
 	Parameter:
 	- filename:		path to the file to analyse
 	"""
-	result = subprocess.run(['wc', '-c', filename], check=True, capture_output=True, text=True)
-	if result.returncode != 0:
-		raise IOError(result.stderr.strip())
-	return int(result.stdout.strip().split()[0])
+	return os.path.getsize(filename)
 
 def __getDictValue(dict: dict[str, Any], key: str, defaultDict: dict[str, Any]) -> Any | None:
 	try:
