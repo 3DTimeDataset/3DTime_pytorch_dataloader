@@ -6,9 +6,26 @@
 
 We present 3DTime, the first public large-scale dataset for predicting the duration of 3D printing instructions. It comprises 99,005 multivariate time series, each representing a sequence of G-code instructions annotated with execution durations, totaling more than 12 years of print. The dataset introduces several modeling challenges: long sequences (on average 79,934 instructions, up to 27 million), multi-input multi-target annotations, and strong contextual dependencies, where instruction durations depend on both past and future operations. These properties make 3DTime a relevant benchmark for long-context and sequence-to-sequence time-series modeling.
 
-## Dataset download access
+## Croissant metadata file and automatic loading
 
-IMPORTANT NOTE: due to the peculiar data format, it is not possible to load the dataset using automatic croissant tools. Instead, use the code provided in this repository
+Due to the peculiar file format, it is not possible to automatically load the actual G-code instruction data using the automatic croissant loading techniques. Instead, use the code provided in this repository.
+
+It is however still possible to load the G-code metadata using those tools:
+
+```python
+from datasets import load_dataset
+dataset = load_dataset("3DTimeDataset/3DTime")
+```
+
+Which will load the dataset G-code level data (such as file names, file sizes, slice time, print time, etc).
+
+IMPORTANT NOTE FOR REVIEWERS:
+
+For now, this metadata loading regards only the smaller version of the dataset (aka the loaded CSV contains 82 rows instead of 99,005). The full dataset, and its corresponding metadata, is still available via the dataset private link in the submission.
+
+We guarantee to make the full dataset public, and to change this metadata automatic loading to the full dataset, upon acceptance.
+
+## Dataset download access
 
 Full dataset download link (NOTE FOR REVIEWERS: this DOI link will be made accessible upon acceptance, in the meantime, the OpenReview submission contains an equivalent private link):
 
